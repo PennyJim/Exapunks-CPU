@@ -1,0 +1,15 @@
+; TODO: test the shit out of this
+
+LOAD 10 #1
+MARK Loop
+ADD 2 #0
+LOAD #RES #0
+SUB #1 1
+JUMP0 @ExitLoop
+LOAD #RES #1
+JUMP @Loop
+
+Mark ExitLoop
+load #0 #RES
+MARK EndLoop
+JUMP @EndLoop
