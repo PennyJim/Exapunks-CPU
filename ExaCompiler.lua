@@ -139,7 +139,7 @@ function Compiler.keys.ADD(param1, param2, lineNum)
 	local output = Compiler.keys.genericMath(param1, param2, lineNum, "Addition",
 		-10, -11, 1, -1, 2, 3, -3, 4, -4)
 	if output[1] == -10 then
-		local preCalc = tostring(tonumber(output[2])+tonumber(output[3]))
+		local preCalc = tostring(output.parameter1 + output.parameter2)
 		return Compiler.keys.LOAD(preCalc, "#RES", lineNum)
 	elseif output[1] == -11 then
 		return Compiler.keys.MULTIPLY("#RES", "2", lineNum)
@@ -156,7 +156,8 @@ function Compiler.keys.SUB(param1,param2,lineNum)
 	local output = Compiler.keys.genericMath(param1, param2, lineNum, "Addition",
 		-10, -11, 5, 6, 7, 8, 9, 10, 11)
 	if output[1] == -10 then
-		return Compiler.keys.LOAD(output[2]-output[3], "#RES", lineNum)
+		local preCalc = tostring(output.parameter1 - output.parameter2)
+		return Compiler.keys.LOAD(preCalc, "#RES", lineNum)
 	elseif output[1] == -11 then
 		return Compiler.keys.LOAD("0", "#RES", lineNum)
 	end
@@ -167,7 +168,8 @@ function Compiler.keys.MULTIPLY(param1, param2, lineNum)
 	local output = Compiler.keys.genericMath(param1, param2, lineNum, "Addition",
 		-1, -2, 12, -12, 13, 14, -14, 15, -15)
 	if output[1] == -1 then
-		return Compiler.keys.LOAD(output[2]*output[3], "#RES", lineNum)
+		local preCalc = tostring(output.parameter1 * output.parameter2)
+		return Compiler.keys.LOAD(preCalc, "#RES", lineNum)
 	elseif output[1] == -2 then
 		output[1] = -100
 		output[5] = "Cannot support #RES * #RES at this time. Please load #RES into a register, and multiply that way"
@@ -186,9 +188,10 @@ function Compiler.keys.DIVIDE(param1,param2,lineNum)
 	local output = Compiler.keys.genericMath(param1, param2, lineNum, "Addition",
 		-1, -2, 5, 6, 7, 8, 9, 10, 11)
 	if output[1] == -1 then
-		return Compiler.keys.LOAD(output[2]-output[3], "#RES", lineNum)
+		local preCalc = tostring(output.parameter1 / output.parameter2)
+		return Compiler.keys.LOAD(preCalc, "#RES", lineNum)
 	elseif output[1] == -2 then
-		return Compiler.keys.LOAD(1, "#RES", lineNum)
+		return Compiler.keys.LOAD("1", "#RES", lineNum)
 	end
 	return output
 end
@@ -243,7 +246,7 @@ function Compiler.keys.STORE(param1, param2, lineNum)
 	return output
 end
 --#endregion
---#region Flow Control -- FIXME: Sometimes returns a number
+--#region Flow Control -- FIXME: Sometimes returns a number. Maybe fixed?
 --#region Jump
 	---@return instructionObj
 function Compiler.keys.JUMP(param1, param2, lineNum)
