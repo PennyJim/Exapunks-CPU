@@ -2,6 +2,7 @@
 --
 -- This file is compatible with Lua 5.3
 
+package.path = package.path .. ";./kaitai-runtime/?.lua"
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
@@ -22,7 +23,7 @@ ExapunksSolution.EditorDisplayStatus = enum.Enum {
 
 ExapunksSolution.MemoryScope = enum.Enum {
   global = 0,
-  local = 1,
+  _local = 1,
 }
 
 function ExapunksSolution:_init(io, parent, root)
