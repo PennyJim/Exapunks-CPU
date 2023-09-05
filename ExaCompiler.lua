@@ -354,13 +354,14 @@ end
 ---Fully Compiles the given file and returns the text
 ---you have to give to the Exa
 ---@param filename string
+---@param isDebug boolean?
 ---@return string
 ---@nodiscard
-function Compiler:from_file(filename)
+function Compiler:from_file(filename, isDebug)
 	self.definitionsUndefined = {}
 	self.definitionsDefined = {}
 
-	local instArray = self:defineUndefined(self:create_insts(filename))
+	local instArray = self:defineUndefined(self:create_insts(filename, isDebug), isDebug)
 
 	-- Create data array
 	local output = {}
@@ -369,13 +370,17 @@ function Compiler:from_file(filename)
 	for i,instruction in ipairs(instArray) do
 		if instruction[1] < 0 then
 			-- Create error instead of write a bad instruction out
-			print("Error: {"..table.concat(instruction, ", ").."}")
+			if (isDebug) then
+				print("Error: {"..table.concat(instruction, ", ").."}")
+			end
 			errorList[#errorList+1] = instruction[4].." : "..instruction[5]
 			errored = true
 		elseif not errored then
 			-- HACK: Patch out nils as they come out
 			if not instruction[2] or not instruction[3] then
-				print(instruction[4].." : "..instruction[1].." : Let out a NIL")
+				if (isDebug) then
+					print(instruction[4].." : "..instruction[1].." : Let out a NIL")
+				end
 				instruction[2] = instruction[2] or "0"
 				instruction[3] = instruction[3] or "0"
 			end
@@ -392,15 +397,16 @@ end
 ---Does a first run through of the given file, and builds the starting
 ---instruction set. This is just a list of `instructionObj`'s.
 ---@param filename string
+---@param isDebug boolean?
 ---@return instructionObj[]
 ---@nodiscard
-function Compiler:create_insts(filename)
+function Compiler:create_insts(filename, isDebug)
 	local output = {}
 	local lineNum = 0
 	for line in io.lines(filename) do
 		lineNum = lineNum + 1
 		-- Remove tabs and capitalize
-		output[#output+1] = self:readLine(line, #output+1, lineNum)
+		output[#output+1] = self:readLine(line, #output+1, lineNum, isDebug)
 	end
 	return output
 end
@@ -408,9 +414,10 @@ end
 ---@param line string
 ---@param instNum integer
 ---@param lineNum integer
+---@param isDebug boolean?
 ---@return instructionObj?
 ---@nodiscard
-function Compiler:readLine(line, instNum, lineNum)
+function Compiler:readLine(line, instNum, lineNum, isDebug)
 	line = line:gsub("\t+", ""):upper();
 	local inst,E = line:find("%S+")
 
@@ -441,10 +448,10 @@ function Compiler:readLine(line, instNum, lineNum)
 
 		-- change definitions
 		if param1:find(Compiler.parameters.DEFINITION) then
-			param1 = self:isDefined(param1, 1, instNum, lineNum, newKey)
+			param1 = self:isDefined(param1, 1, instNum, lineNum, newKey, isDebug)
 		end
 		if param2:find(Compiler.parameters.DEFINITION) then
-			param2 = self:isDefined(param2, 2, instNum, lineNum, newKey)
+			param2 = self:isDefined(param2, 2, instNum, lineNum, newKey, isDebug)
 		end
 		-- Add key to output
 		return newKey(param1,param2,lineNum,instNum);
@@ -454,8 +461,9 @@ end
 ---and resolve them through `self.definitionsDefined` again and reconstruct the
 ---relevent instructins in the passed array
 ---@param output instructionObj[]
+---@param isDebug boolean?
 ---@return instructionObj[]
-function Compiler:defineUndefined(output)
+function Compiler:defineUndefined(output, isDebug)
 	-- Go back and finish those with undefiend definitions
 	for k,lines in pairs(self.definitionsUndefined) do
 		local value = self.definitionsDefined[k]
@@ -470,7 +478,9 @@ function Compiler:defineUndefined(output)
 			-- Replace params
 			params[line[4]] = self.definitionsDefined[k]
 			-- Re-initialize instruction
-			print("OldInst: {"..table.concat(oldOutput, ", ").."}")
+			if (isDebug) then
+				print("OldInst: {"..table.concat(oldOutput, ", ").."}")
+			end
 			output[line[1]] = line[3](params[1], params[2], oldOutput[4])
 		end
 	end
@@ -506,15 +516,18 @@ end
 ---@param numParam integer
 ---@param instNum integer
 ---@param lineNum integer
+---@param isDebug boolean?
 ---@param key fun(param1:string, param1:string, lineNum:integer, instNum:integer): instructionObj
 ---@return string
-function Compiler:isDefined(param, numParam, instNum, lineNum, key)
+function Compiler:isDefined(param, numParam, instNum, lineNum, key, isDebug)
 	-- Get definiton without @
 	local newParam = self.definitionsDefined[param]
 	local undefiend = self.definitionsUndefined[param]
 	local undefinedValue = newUndefinition{instNum, lineNum, key, numParam}
 	if not newParam then
-		print(lineNum.." : "..param.." is not defined")
+		if (isDebug) then
+			print(lineNum.." : "..param.." is not defined")
+		end
 		if not undefiend then
 			self.definitionsUndefined[param] = {undefinedValue}
 		else
