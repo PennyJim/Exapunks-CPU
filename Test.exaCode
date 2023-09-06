@@ -1,15 +1,17 @@
-; TODO: test the shit out of this
+; Set the first byte as _start: location
 
-LOAD 10 #1
-MARK Loop
-ADD 2 #0
-LOAD #RES #0
-SUB #1 1
-JUMP0 @ExitLoop
-LOAD #RES #1
-JUMP @Loop
+_start:
+	LOAD 0 #0
+	LOAD 10 #1
+	Loop:
+		ADD 2 #0
+		LOAD #RES #0
+		SUB #1 1
+		JUMP0 @ExitLoop
+		LOAD #RES #1
+	JUMP @Loop
 
-Mark ExitLoop
-load #0 #RES
-MARK EndLoop
-JUMP @EndLoop
+ExitLoop:
+	load #0 #RES
+	EndLoop:
+	JUMP @EndLoop
