@@ -8,8 +8,8 @@ import com.pennyjim.exacode.Assembler;
 public class Main {
 	public static void main(String[] args) {
 		if (args.length > 0)
-			Assembler.from_file(args[0]);
+			Assembler.fromFile(args[0]);
 		else
-			Assembler.from_file("Test.exaCode");
+			Assembler.fromFile("Test.exaCode");
 	}
 }
