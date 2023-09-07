@@ -1,6 +1,7 @@
 package instructions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,9 +77,10 @@ class MathInstructionsTests {
 			int randomNum2 = (int)(Math.random() * 10000);
 
 			//Make sure Values don't get mixed
-			Instruction testInst0 = new MathInstructionTesting(p(""+randomNum1), p(""+randomNum2), 0);
-			assertEquals(randomNum1, testInst0.getParam1().getValue(), "Parameters got swapped");
-			assertEquals(randomNum2, testInst0.getParam2().getValue(), "Parameters got swapped");
+			Instruction testInst = new MathInstructionTesting(p(""+randomNum1), p(""+randomNum2), 0);
+			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+			assertEquals(randomNum1, testInst.getParam1().getValue(), "Parameters got swapped");
+			assertEquals(randomNum2, testInst.getParam2().getValue(), "Parameters got swapped");
 		}
 	}
 
@@ -90,9 +92,10 @@ class MathInstructionsTests {
 			int randomNum2 = (int)(Math.random() * 10000);
 
 			Instruction testInst = new Add(p(""+randomNum1),p(""+randomNum2),i);
-			assertEquals("Load", testInst.getInstName(), "Instruction is not a Load");
+			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
 			assertEquals(randomNum1+randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Loading into the wrong register");
+			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
 		}
 	}
 
@@ -104,9 +107,10 @@ class MathInstructionsTests {
 			int randomNum2 = (int)(Math.random() * 10000);
 
 			Instruction testInst = new Sub(p(""+randomNum1),p(""+randomNum2),i);
-			assertEquals("Load", testInst.getInstName(), "Instruction is not a Load");
+			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
 			assertEquals(randomNum1-randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Loading into the wrong register");
+			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
 		}
 	}
 
@@ -118,9 +122,10 @@ class MathInstructionsTests {
 			int randomNum2 = (int)(Math.random() * 10000);
 
 			Instruction testInst = new Multiply(p(""+randomNum1),p(""+randomNum2),i);
-			assertEquals("Load", testInst.getInstName(), "Instruction is not a Load");
+			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
 			assertEquals(randomNum1*randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Loading into the wrong register");
+			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
 		}
 	}
 
@@ -132,9 +137,10 @@ class MathInstructionsTests {
 			int randomNum2 = (int)(Math.random() * 10000);
 
 			Instruction testInst = new Divide(p(""+randomNum1),p(""+randomNum2),i);
-			assertEquals("Load", testInst.getInstName(), "Instruction is not a Load");
+			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
 			assertEquals(randomNum1/randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Loading into the wrong register");
+			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
 		}
 	}
 
@@ -151,9 +157,10 @@ class MathInstructionsTests {
 	@DisplayName("Sub 'Optimization'")
 	void SubOptimizeTest() {
 		Instruction testInst = new Sub(p("#RES"),p("#RES"),0);
-		assertEquals("Load", testInst.getInstName(), "Instruction is not a Load");
-		assertEquals(0, testInst.getParam1().getValue(), "Loading wrong value");
-		assertEquals(Types.RESULT, testInst.getParam2().getType(), "Loading into wrong register");
+		assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+		assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
+		assertEquals(0, testInst.getParam1().getValue(), "Moveing wrong value");
+		assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into wrong register");
 	}
 
 	@Test
@@ -168,9 +175,10 @@ class MathInstructionsTests {
 	@DisplayName("Divide 'Optimization'")
 	void DivideOptimizeTest() {
 		Instruction testInst = new Divide(p("#RES"),p("#RES"),0);
-		assertEquals("Load", testInst.getInstName(), "Instruction is not a Load");
-		assertEquals(1, testInst.getParam1().getValue(), "Loading wrong value");
-		assertEquals(Types.RESULT, testInst.getParam2().getType(), "Loading into wrong register");
+		assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+		assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
+		assertEquals(1, testInst.getParam1().getValue(), "Moveing wrong value");
+		assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into wrong register");
 	}
 
 	@Test
@@ -183,7 +191,9 @@ class MathInstructionsTests {
 			Parameter value = p(""+(int)(Math.random()*10000));
 
 			Instruction testInst1 = new Add(result, register, 1);
+			assertNotEquals(-100, testInst1.getInstNum(), testInst1.getErrMsg());
 			Instruction testInst2 = new Add(register, result, 2);
+			assertNotEquals(-100, testInst2.getInstNum(), testInst2.getErrMsg());
 
 			assertEquals(testInst1.getParam1().getType(),		testInst2.getParam1().getType());
 			assertEquals(testInst1.getParam1().getValue(),	testInst2.getParam1().getValue());
@@ -191,7 +201,9 @@ class MathInstructionsTests {
 			assertEquals(testInst1.getParam2().getValue(),	testInst2.getParam2().getValue());
 
 			Instruction testInst3 = new Add(result, value, 3);
+			assertNotEquals(-100, testInst3.getInstNum(), testInst3.getErrMsg());
 			Instruction testInst4 = new Add(value, result, 4);
+			assertNotEquals(-100, testInst4.getInstNum(), testInst4.getErrMsg());
 
 			assertEquals(testInst3.getParam1().getType(),		testInst4.getParam1().getType());
 			assertEquals(testInst3.getParam1().getValue(),	testInst4.getParam1().getValue());
@@ -199,7 +211,9 @@ class MathInstructionsTests {
 			assertEquals(testInst3.getParam2().getValue(),	testInst4.getParam2().getValue());
 
 			Instruction testInst5 = new Add(register, value, 5);
+			assertNotEquals(-100, testInst5.getInstNum(), testInst5.getErrMsg());
 			Instruction testInst6 = new Add(value, register, 6);
+			assertNotEquals(-100, testInst6.getInstNum(), testInst6.getErrMsg());
 
 			assertEquals(testInst5.getParam1().getType(),		testInst6.getParam1().getType());
 			assertEquals(testInst5.getParam1().getValue(),	testInst6.getParam1().getValue());
@@ -218,7 +232,9 @@ class MathInstructionsTests {
 			Parameter value = p(""+(int)(Math.random()*10000));
 
 			Instruction testInst1 = new Multiply(result, register, 1);
+			assertNotEquals(-100, testInst1.getInstNum(), testInst1.getErrMsg());
 			Instruction testInst2 = new Multiply(register, result, 2);
+			assertNotEquals(-100, testInst2.getInstNum(), testInst2.getErrMsg());
 
 			assertEquals(testInst1.getParam1().getType(),		testInst2.getParam1().getType());
 			assertEquals(testInst1.getParam1().getValue(),	testInst2.getParam1().getValue());
@@ -226,7 +242,9 @@ class MathInstructionsTests {
 			assertEquals(testInst1.getParam2().getValue(),	testInst2.getParam2().getValue());
 
 			Instruction testInst3 = new Multiply(result, value, 3);
+			assertNotEquals(-100, testInst3.getInstNum(), testInst3.getErrMsg());
 			Instruction testInst4 = new Multiply(value, result, 4);
+			assertNotEquals(-100, testInst4.getInstNum(), testInst4.getErrMsg());
 
 			assertEquals(testInst3.getParam1().getType(),		testInst4.getParam1().getType());
 			assertEquals(testInst3.getParam1().getValue(),	testInst4.getParam1().getValue());
@@ -234,7 +252,9 @@ class MathInstructionsTests {
 			assertEquals(testInst3.getParam2().getValue(),	testInst4.getParam2().getValue());
 
 			Instruction testInst5 = new Multiply(register, value, 5);
+			assertNotEquals(-100, testInst5.getInstNum(), testInst5.getErrMsg());
 			Instruction testInst6 = new Multiply(value, register, 6);
+			assertNotEquals(-100, testInst6.getInstNum(), testInst6.getErrMsg());
 
 			assertEquals(testInst5.getParam1().getType(),		testInst6.getParam1().getType());
 			assertEquals(testInst5.getParam1().getValue(),	testInst6.getParam1().getValue());
