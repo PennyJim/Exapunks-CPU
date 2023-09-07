@@ -64,6 +64,7 @@ enums:
   editor_display_status:
     0: unrolled
     1: collapsed
+    2: other
   memory_scope:
     0: global
-    1: local
+    1: _local

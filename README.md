@@ -15,8 +15,7 @@ How To Use (Linux)
 Have a symlink to the folder containing all of the solutions at `./solutions/`
 1. Compile `Test.exaCode` with `lua -l "ExaCompiler" -e "print(Compiler:from_file('Test.exaCode'))" > ./output.txt`
 2. Copy `output.txt` into `CPU.exa` between `;INSTRUCTIONS` and `;MEMORY START`
-3. Upload `CPU.exa` into `./solutions/sandbox-${N}.solution` with `lua -l "exapunks_solution_write" -e "solution = ExapunksSolution:from_file('./solutions/sandbox-<N>.solution'); solution:import_code('CPU.exa'); solution:save_to_file('./solutions/sandbox-<N>.solution')"`
-   * Saving got broken when I moved `exapunks_solution_write.lua` out of `exapunks_solution.lua`
+3. Upload `CPU.exa` into `./solutions/sandbox-${N}.solution` with `lua -l "exapunks_solution_write" -e "solution = ExapunksSolution:from_file('./solutions/sandbox-<N>.solution'); solution:import_code(1, 'CPU.exa'); solution:save_to_file('./solutions/sandbox-<N>.solution')"`
 
 Structure
 ---

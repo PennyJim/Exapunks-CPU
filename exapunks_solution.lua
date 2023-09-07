@@ -19,6 +19,7 @@ ExapunksSolution.WinValueType = enum.Enum {
 ExapunksSolution.EditorDisplayStatus = enum.Enum {
   unrolled = 0,
   collapsed = 1,
+  other = 2,
 }
 
 ExapunksSolution.MemoryScope = enum.Enum {
