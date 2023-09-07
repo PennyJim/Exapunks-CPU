@@ -13,7 +13,8 @@ public class Add extends MathInstruction{
 		if (this.instNum == -100) { // Defined Error
 			return;
 		} else if (this.instNum == -10) { //Precalc
-			// TODO: Return a load instruction
+			int preCacl = param1.getValue() + param2.getValue();
+			transformInto(new Move(new Parameter(Integer.toString(preCacl)), new Parameter("#RES"), lineNum));
 		} else if (this.instNum == -11) { //Change instruction
 			transformInto(new Multiply(new Parameter("2"), param1, lineNum));
 		} else if (this.instNum < 0) {

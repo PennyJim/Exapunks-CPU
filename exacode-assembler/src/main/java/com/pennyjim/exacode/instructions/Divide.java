@@ -13,9 +13,10 @@ public class Divide extends MathInstruction {
 		if (this.instNum == -100) { // Defined Error
 			return;
 		} else if (this.instNum == -10) { //Precalc
-			// TODO: Return a load instruction
+			int preCacl = param1.getValue() / param2.getValue();
+			transformInto(new Move(new Parameter(Integer.toString(preCacl)), new Parameter("#RES"), lineNum));
 		} else if (this.instNum == -11) { //Change instruction
-			// TODO: Return a load 1 instruction
+			transformInto(new Move(new Parameter("1"), new Parameter("#RES"), lineNum));
 		}
 	}
 }

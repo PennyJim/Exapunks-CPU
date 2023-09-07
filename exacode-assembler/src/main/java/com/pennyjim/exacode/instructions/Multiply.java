@@ -13,7 +13,8 @@ public class Multiply extends MathInstruction {
 		if (this.instNum == -100) { // Defined Error
 			return;
 		} else if (this.instNum == -10) { //Precalc
-			// TODO: Return a load instruction
+			int preCacl = param1.getValue() * param2.getValue();
+			transformInto(new Move(new Parameter(Integer.toString(preCacl)), new Parameter("#RES"), lineNum));
 		} else if (this.instNum == -11) { //Change instruction
 			this.instNum = -100;
 			this.errMsg = "Cannot support #RES * #RES at this time. Please load #RES into a register, and multiply that way";

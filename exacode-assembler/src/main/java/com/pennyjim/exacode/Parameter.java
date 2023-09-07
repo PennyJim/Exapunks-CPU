@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 public class Parameter {
 	public static enum Types {
-		VALUE("\\d+"),
+		VALUE("-?\\d+"),
 		REGISTER("#\\d"),
 		RESULT("#RES"),
 		MEMORY("&\\d+"),
