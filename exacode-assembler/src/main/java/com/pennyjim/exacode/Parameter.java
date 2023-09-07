@@ -52,11 +52,11 @@ import java.util.regex.Pattern;
 
 public class Parameter {
 	public static enum Types {
-		VALUE("-?\\d+"),
+		VALUE("-?\\d{1,4}"),
 		REGISTER("#\\d"),
 		RESULT("#RES"),
-		MEMORY("&\\d+"),
-		LINE("!\\d+"),
+		MEMORY("&\\d{1,4}"),
+		LINE("!\\d{1,4}"),
 		DEFINITION("@\\w+");
 
 		private Pattern regex;
@@ -77,7 +77,7 @@ public class Parameter {
 	private Types type;
 	private int value;
 
-	public Parameter(String input) {
+	public Parameter(String input) throws InvalidParameterException {
 		this.input = input;
 		for (Types type : Types.values()) {
 			if (type.matches(input)) {
@@ -99,6 +99,8 @@ public class Parameter {
 			if (this.type == Types.REGISTER) input = input.substring(0,1);
 
 			this.value = Integer.parseInt(input);
+		} else {
+			throw new InvalidParameterException(input);
 		}
 	}
 
@@ -107,4 +109,10 @@ public class Parameter {
 	public String		getInput()		{ return this.input;			}
 	public Types		getType()			{ return this.type;				}
 	public int			getValue()		{ return this.value;			}
+
+	public class InvalidParameterException extends RuntimeException {
+		public InvalidParameterException(String message) {
+			super(message);
+		}
+	}
 }
