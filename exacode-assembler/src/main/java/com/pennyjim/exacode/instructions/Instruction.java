@@ -36,7 +36,14 @@ public abstract class Instruction {
 		this.errMsg = "";
 		
 		// Check argument count
-		if (minParams > 0 && param1.isDefined()) errMsg = adjective + " needs at least 1 value";
-		else if (minParams == 2 && param2.isDefined()) errMsg = adjective + " needs 2 values";
+		if (minParams > 0 && !param1.isDefined()) errMsg = adjective + " needs at least 1 value";
+		else if (minParams == 2 && !param2.isDefined()) errMsg = adjective + " needs 2 values";
 	}
+
+	public int				getInstNum	() { return instNum;	} 
+	public String			getInstName	() { return instName;	}
+	public Parameter	getParam1		() { return param1;		}
+	public Parameter	getParam2		() { return param2;		}
+	public int				getLineNum	() { return lineNum;	}
+	public String			getErrMsg		() { return errMsg;		}
 }
