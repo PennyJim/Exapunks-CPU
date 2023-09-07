@@ -8,7 +8,7 @@ public class Sub extends MathInstruction{
 		Parameter param2,
 		int lineNum
 	) {
-		super("Sub", param1, param2, lineNum, "Adding",
+		super("Sub", param1, param2, lineNum, "Subtracting",
 			-10, -11, 5, 6, 7, 8, 9, 10, 11);
 		if (this.instNum == -100) { // Defined Error
 			return;

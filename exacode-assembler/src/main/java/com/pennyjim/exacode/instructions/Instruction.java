@@ -17,7 +17,7 @@ public abstract class Instruction {
 	 * @param param2
 	 * @param lineNum
 	 * @param minParams
-	 * @param adjective for argument count error message
+	 * @param verb for argument count error message
 	 */
 	public Instruction(
 		String instName,
@@ -25,7 +25,7 @@ public abstract class Instruction {
 		Parameter param2, 
 		int lineNum, 
 		int minParams, 
-		String adjective
+		String verb
 	) {
 		// Set values
 		this.instNum = -100;
@@ -36,8 +36,8 @@ public abstract class Instruction {
 		this.errMsg = "";
 		
 		// Check argument count
-		if (minParams > 0 && !param1.isDefined()) errMsg = adjective + " needs at least 1 value";
-		else if (minParams == 2 && !param2.isDefined()) errMsg = adjective + " needs 2 values";
+		if (minParams > 0 && !param1.isDefined()) errMsg = verb + " needs at least 1 value";
+		else if (minParams == 2 && !param2.isDefined()) errMsg = verb + " needs 2 values";
 	}
 
 	protected void transformInto(Instruction newInst) {

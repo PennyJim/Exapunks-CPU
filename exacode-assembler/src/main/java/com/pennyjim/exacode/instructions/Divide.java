@@ -8,7 +8,7 @@ public class Divide extends MathInstruction {
 		Parameter param2,
 		int lineNum
 	) {
-		super("Divide", param1, param2, lineNum, "Adding",
+		super("Divide", param1, param2, lineNum, "Dividing",
 			-10, -11, 16, 17, 18, 19, 20, 21, 22);
 		if (this.instNum == -100) { // Defined Error
 			return;

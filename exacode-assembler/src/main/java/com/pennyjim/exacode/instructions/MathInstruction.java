@@ -10,7 +10,7 @@ public abstract class MathInstruction extends Instruction {
 	 * @param param1
 	 * @param param2
 	 * @param lineNum
-	 * @param adjective for argument count error message
+	 * @param verb for argument count error message
 	 * 
 	 * @param ValVal 
 	 * @param ResRes 
@@ -27,7 +27,7 @@ public abstract class MathInstruction extends Instruction {
 		Parameter param1, 
 		Parameter param2, 
 		int lineNum,
-		String adjective,
+		String verb,
 		
 		int ValVal,
 		int ResRes,
@@ -39,7 +39,7 @@ public abstract class MathInstruction extends Instruction {
 		int RegRes,
 		int ResReg
 	) {
-		super(instName, param1, param2, lineNum, 2, adjective);
+		super(instName, param1, param2, lineNum, 2, verb);
 		if (this.errMsg != "") return; //Already errored;
 
 		if (param1.getType() == Types.VALUE && param2.getType() == Types.VALUE) {

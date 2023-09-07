@@ -8,7 +8,7 @@ public class Multiply extends MathInstruction {
 		Parameter param2,
 		int lineNum
 	) {
-		super("Multiply", param1, param2, lineNum, "Adding",
+		super("Multiply", param1, param2, lineNum, "Multiplying",
 			-10, -11, 12, -12, 13, 14, -14, 15, -15);
 		if (this.instNum == -100) { // Defined Error
 			return;
