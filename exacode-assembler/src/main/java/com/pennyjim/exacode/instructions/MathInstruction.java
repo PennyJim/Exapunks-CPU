@@ -1,6 +1,7 @@
 package com.pennyjim.exacode.instructions;
 
 import com.pennyjim.exacode.Parameter;
+import com.pennyjim.exacode.Parameter.Types;
 
 public abstract class MathInstruction extends Instruction {
 	/**
@@ -41,34 +42,28 @@ public abstract class MathInstruction extends Instruction {
 		super(instName, param1, param2, lineNum, 2, adjective);
 		if (this.errMsg != "") return; //Already errored;
 
-		//TODO: set instNum to approrppiate value
-		// This requires Parameter to be finalized
-	}
+		if (param1.getType() == Types.VALUE && param2.getType() == Types.VALUE) {
+			this.instNum = ValVal;
+		} else if (param1.getType() == Types.RESULT && param2.getType() == Types.RESULT) {
+			this.instNum = ResRes;
+		} else if (param1.getType() == Types.RESULT && param2.getType() == Types.VALUE) {
+			this.instNum = ResVal;
+		} else if (param1.getType() == Types.VALUE && param2.getType() == Types.RESULT) {
+			this.instNum = ValRes;
+		} else if (param1.getType() == Types.REGISTER && param2.getType() == Types.REGISTER) {
+			this.instNum = RegReg;
+		} else if (param1.getType() == Types.REGISTER && param2.getType() == Types.VALUE) {
+			this.instNum = RegVal;
+		} else if (param1.getType() == Types.VALUE && param2.getType() == Types.REGISTER) {
+			this.instNum = ValReg;
+		} else if (param1.getType() == Types.REGISTER && param2.getType() == Types.RESULT) {
+			this.instNum = RegRes;
+		} else if (param1.getType() == Types.RESULT && param2.getType() == Types.REGISTER) {
+			this.instNum = ResReg;
+		}
 
-	// VV,ResRes,ResV,VRes,RR,RV,VR,RRes,ResR)
-	// local output, param1Type, param2Type =
-	// 	Compiler.keys.default(param1, param2, lineNum, 2, type)
-	// if (param1Type == "VALUE" and param2Type == "VALUE") then
-	// 	output[1] = VV
-	// elseif (param1Type == "RESULT" and param2Type == "RESULT") then
-	// 	output[1] = ResRes
-	// elseif (param1Type == "RESULT" and param2Type == "VALUE") then
-	// 	output[1] = ResV
-	// elseif (param2Type == "RESULT" and param1Type == "VALUE") then
-	// 	output[1] = VRes
-	// elseif (param1Type == "REGISTER" and param2Type == "REGISTER") then
-	// 	output[1] = RR
-	// elseif (param1Type == "REGISTER" and param2Type == "VALUE") then
-	// 	output[1] = RV
-	// elseif (param2Type == "REGISTER" and param1Type == "VALUE") then
-	// 	output[1] = VR
-	// elseif (param1Type == "REGISTER" and param2Type == "RESULT") then
-	// 	output[1] = RRes
-	// elseif (param2Type == "REGISTER" and param1Type == "RESULT") then
-	// 	output[1] = ResR
-	// end
-	// if output[1] == -100 then
-	// 	output[5] = param1Type.." and "..param2Type.." are not currently supported parameter types"
-	// end
-	// return output
+		if (this.instNum == -100) {
+			this.errMsg = param1.getType()+" and "+param2.getType()+" are not currently supported parameter types";
+		}
+	}
 }
