@@ -7,9 +7,11 @@ import com.pennyjim.exacode.Assembler;
  */
 public class Main {
 	public static void main(String[] args) {
-		if (args.length > 0)
-			Assembler.fromFile(args[0]);
-		else
-			Assembler.fromFile("Test.exaCode");
+		try {
+			if (args.length > 0) Assembler.fromFile(args[0]);
+			else Assembler.fromFile("Test.exaCode");
+		} catch (Exception e) {
+			System.err.println(args[0] + " is not a valid file");
+		}
 	}
 }

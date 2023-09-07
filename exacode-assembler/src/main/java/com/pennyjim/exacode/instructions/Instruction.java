@@ -36,7 +36,7 @@ public abstract class Instruction {
 		this.errMsg = "";
 		
 		// Check argument count
-		if (minParams > 0 && param1.getType() == "") errMsg = adjective + " needs at least 1 value";
-		else if (minParams == 2 && param2.getType() == "") errMsg = adjective + " needs 2 values";
+		if (minParams > 0 && param1.isDefined()) errMsg = adjective + " needs at least 1 value";
+		else if (minParams == 2 && param2.isDefined()) errMsg = adjective + " needs 2 values";
 	}
 }
