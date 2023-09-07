@@ -6,7 +6,7 @@ import com.pennyjim.exacode.Parameter.Types;
 public class Move extends Instruction {
 	public Move(Parameter param1, Parameter param2, int lineNum) {
 		super("Move", param1, param2, lineNum, 2, "Moving");
-		if (errMsg == "") return; //Already errored
+		if (this.errMsg != "") return; //Already errored
 
 		int selector = param1.getType().ordinal() * Types.values().length + param2.getType().ordinal();
 		switch (selector) {
