@@ -40,6 +40,15 @@ public abstract class Instruction {
 		else if (minParams == 2 && !param2.isDefined()) errMsg = adjective + " needs 2 values";
 	}
 
+	protected void transformInto(Instruction newInst) {
+		this.instNum = newInst.instNum;
+		this.instName = newInst.instName;
+		this.param1 = newInst.param1;
+		this.param2 = newInst.param2;
+		this.lineNum = newInst.lineNum;
+		this.errMsg = newInst.errMsg;
+	}
+
 	public int				getInstNum	() { return instNum;	} 
 	public String			getInstName	() { return instName;	}
 	public Parameter	getParam1		() { return param1;		}
