@@ -3,6 +3,7 @@ package instructions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,14 +46,60 @@ class MathInstructionsTests {
 	}
 
 	class MathInstructionTesting extends MathInstruction {
+		public MathInstructionTesting(Parameter param1, Parameter param2, int lineNum, boolean isOld) {
+			super("test", param1, param2, lineNum, "testing", 
+			1, 2, 3, 4, 5, 6, 7, 8, 9, isOld);
+		}
 		public MathInstructionTesting(
 			Parameter param1, 
 			Parameter param2, 
 			int lineNum
 		) {
 			super("test", param1, param2, lineNum, "testing", 
-			1, 2, 3, 4, 5, 6, 7, 8, 9);
+			1, 2, 3, 4, 5, 6, 7, 8, 9, false);
 		}
+	}
+
+	@Test
+	@DisplayName("Is New Better?")
+	void BetterTest() {
+		final int testNumber = 10000000;
+		final Types[][] typeList = new Types[9][2];
+		final Types[] typeValues = new Types[] {Types.VALUE, Types.RESULT, Types.REGISTER};
+		for (int i = 0; i < typeValues.length; i++) {
+			for (int j = 0; j < typeValues.length; j++) {
+				typeList[i*typeValues.length+j] = new Types[] {typeValues[i], typeValues[j]};
+			}
+		}
+
+		long startTimeOld = System.nanoTime();
+		for (int i = 0; i < testNumber; i++) {
+			Parameter param1 = p(typeList[i%9][0]);
+			Parameter param2 = p(typeList[i%9][1]);
+			new MathInstructionTesting(param1, param2, 0, true);
+		}
+		long endTimeOld = System.nanoTime();
+		long oldDuration = endTimeOld-startTimeOld;
+
+		long startTimeNew = System.nanoTime();
+		for (int i = 0; i < testNumber; i++) {
+			Parameter param1 = p(typeList[i%9][0]);
+			Parameter param2 = p(typeList[i%9][1]);
+			new MathInstructionTesting(param1, param2, 0, false);
+		}
+		long endTimeNew = System.nanoTime();
+		long newDuration = endTimeNew-startTimeNew;
+
+		double durationDifference = ((double)(newDuration-oldDuration) / (double)oldDuration) * 100;
+
+		System.out.print(oldDuration);
+		System.out.print("ns -> ");
+		System.out.print(newDuration);
+		System.out.print("ns = ");
+		System.out.print(durationDifference);
+		System.out.print("%");
+
+		assertTrue(newDuration < oldDuration, "Old is better");
 	}
 	
 	@Test
