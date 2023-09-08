@@ -52,11 +52,11 @@ import java.util.regex.Pattern;
 
 public class Parameter {
 	public static enum Types {
-		VALUE("-?\\d{1,4}"),
-		REGISTER("#\\d"),
+		VALUE("-?\\d+"),
+		REGISTER("#\\d+"),
 		RESULT("#RES"),
-		MEMORY("&\\d{1,4}"),
-		LINE("!\\d{1,4}"),
+		MEMORY("&\\d+"),
+		LINE("!\\d+"),
 		DEFINITION("@\\w+");
 
 		private Pattern regex;
@@ -69,6 +69,10 @@ public class Parameter {
 		public boolean matches(String input) {
 			return this.regex.matcher(input).matches();
 		}
+		public String toReadibleString() {
+			String string = this.toString();
+			return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+		}
 	}
 
 
@@ -77,6 +81,12 @@ public class Parameter {
 	private Types type;
 	private int value;
 
+	/**
+	 * Creates a Paramter with a specific type based on the passed string
+	 * @param input
+	 * @throws InvalidParameterException
+	 * @see Types
+	 */
 	public Parameter(String input) throws InvalidParameterException {
 		this.input = input;
 		for (Types type : Types.values()) {
@@ -88,19 +98,38 @@ public class Parameter {
 
 		if (this.type == Types.DEFINITION) {
 			//TODO: handle the variable;
+			throw new RuntimeException("Not yet Implemented");
 
 		} else if (this.type == Types.RESULT) {
 			this.isDefined = true;
 			this.value = 0;
 
 		} else if (this.type != null) {
-			this.isDefined = true;
 			if (this.type != Types.VALUE) input = input.substring(1);
-			if (this.type == Types.REGISTER) input = input.substring(0,1);
-
 			this.value = Integer.parseInt(input);
+			
+			//Error block
+			if (this.type == Types.REGISTER && this.value > 9) {
+				throw new InvalidParameterException(this.type, "too large (limit is 9)", input);
+			} else if (this.type == Types.REGISTER && this.value < 0) {
+				throw new InvalidParameterException(this.type, "too small (limit is 0)", input);
+
+			} else if (this.type == Types.LINE && this.value > 3333) {
+				throw new InvalidParameterException(this.type, "too large (limit is 3333)", input);
+			} else if (this.type == Types.LINE && this.value < 1) {
+				throw new InvalidParameterException(this.type, "too small (limit is 1)", input);
+
+			} else if (this.value > 9999) {
+				throw new InvalidParameterException(this.type, "too large (limit is 9999)", input);
+			} else if (this.type != Types.VALUE && this.value < 0) {
+				throw new InvalidParameterException(this.type, "too small (limit is 0)", input);
+			} else if (this.value < -9999) {
+				throw new InvalidParameterException(this.type, "too small (limit is -9999)", input);
+			}
+
+			this.isDefined = true;
 		} else {
-			throw new InvalidParameterException(input);
+			throw new InvalidParameterException("Unknown Parameter", input);
 		}
 	}
 
@@ -111,8 +140,24 @@ public class Parameter {
 	public int			getValue()		{ return this.value;			}
 
 	public class InvalidParameterException extends RuntimeException {
-		public InvalidParameterException(String message) {
-			super(message);
+		/**
+		 * Formats the error message as "${message}: '${input}'"
+		 * @param message
+		 * @param input
+		 */
+		public InvalidParameterException(String message, String input) {
+			super(message+": '"+input+"'");
+		}
+		/**
+		 * Formats the error message as "${message}: '${input}'"
+		 * Also adds `Types.toReadibleString` to the beginning of the message
+		 * @param type
+		 * @param message
+		 * @param input
+		 * @see Types.toReadibleString()
+		 */
+		public InvalidParameterException(Types type, String message, String input) {
+			super(type.toReadibleString() + " " + message+": '"+input+"'");
 		}
 	}
 }
