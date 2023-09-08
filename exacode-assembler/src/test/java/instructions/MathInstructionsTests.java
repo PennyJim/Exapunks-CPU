@@ -2,11 +2,13 @@ package instructions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.pennyjim.exacode.Parameter;
+import com.pennyjim.exacode.Parameter.InvalidParameterException;
 import com.pennyjim.exacode.Parameter.Types;
 import com.pennyjim.exacode.instructions.*;
 
@@ -34,6 +36,12 @@ class MathInstructionsTests {
 			default:
 				throw new Error();
 		}
+	}
+	static int randomValue() {
+		return (int)(Math.random() * 20000) - 10000;
+	}
+	static int randomPosValue() {
+		return (int)(Math.random() * 10000);
 	}
 
 	class MathInstructionTesting extends MathInstruction {
@@ -73,8 +81,8 @@ class MathInstructionsTests {
 	@DisplayName("Parameter Differenciation Test")
 	void ParamMixupTest() {
 		for (int i = 0; i < randomCount; i++) {
-			int randomNum1 = (int)(Math.random() * 10000);
-			int randomNum2 = (int)(Math.random() * 10000);
+			int randomNum1 = randomValue();
+			int randomNum2 = randomValue();
 
 			//Make sure Values don't get mixed
 			Instruction testInst = new MathInstructionTesting(p(""+randomNum1), p(""+randomNum2), 0);
@@ -88,14 +96,22 @@ class MathInstructionsTests {
 	@DisplayName("Add Precomputation")
 	void AddPrecomputeTest() {
 		for (int i = 0; i < randomCount; i++) {
-			int randomNum1 = (int)(Math.random() * 10000);
-			int randomNum2 = (int)(Math.random() * 10000);
+			int randomNum1 = randomValue();
+			int randomNum2 = randomValue();
+			int preCalc = randomNum1+randomNum2;
 
-			Instruction testInst = new Add(p(""+randomNum1),p(""+randomNum2),i);
-			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
-			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
-			assertEquals(randomNum1+randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
+			if (preCalc > 9999 || preCalc < -9999) {
+				assertThrows(InvalidParameterException.class, () -> {
+					new Add(p(""+randomNum1),p(""+randomNum2),0);
+				}, "Should've resulted in invalid parameter");
+
+			} else {
+				Instruction testInst = new Add(p(""+randomNum1),p(""+randomNum2),i);
+				assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+				assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
+				assertEquals(preCalc, testInst.getParam1().getValue(), "Incorrectly Calculated");
+				assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
+			}
 		}
 	}
 
@@ -103,14 +119,22 @@ class MathInstructionsTests {
 	@DisplayName("Sub Precomputation")
 	void SubPrecomputeTest() {
 		for (int i = 0; i < randomCount; i++) {
-			int randomNum1 = (int)(Math.random() * 10000);
-			int randomNum2 = (int)(Math.random() * 10000);
+			int randomNum1 = randomValue();
+			int randomNum2 = randomValue();
+			int preCalc = randomNum1-randomNum2;
 
-			Instruction testInst = new Sub(p(""+randomNum1),p(""+randomNum2),i);
-			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
-			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
-			assertEquals(randomNum1-randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
+			if (preCalc > 9999 || preCalc < -9999) {
+				assertThrows(InvalidParameterException.class, () -> {
+					new Sub(p(""+randomNum1),p(""+randomNum2),0);
+				}, "Should've resulted in invalid parameter");
+
+			} else {
+				Instruction testInst = new Sub(p(""+randomNum1),p(""+randomNum2),i);
+				assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+				assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
+				assertEquals(preCalc, testInst.getParam1().getValue(), "Incorrectly Calculated");
+				assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
+			}
 		}
 	}
 
@@ -118,14 +142,22 @@ class MathInstructionsTests {
 	@DisplayName("Multiply Precomputation")
 	void MultiplyPrecomputeTest() {
 		for (int i = 0; i < randomCount; i++) {
-			int randomNum1 = (int)(Math.random() * 10000);
-			int randomNum2 = (int)(Math.random() * 10000);
+			int randomNum1 = randomValue();
+			int randomNum2 = randomValue();
+			int preCalc = randomNum1 * randomNum2;
 
-			Instruction testInst = new Multiply(p(""+randomNum1),p(""+randomNum2),i);
-			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
-			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
-			assertEquals(randomNum1*randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
-			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
+			if (preCalc > 9999 || preCalc < -9999) {
+				assertThrows(InvalidParameterException.class, () -> {
+					new Multiply(p(""+randomNum1),p(""+randomNum2),0);
+				}, "Should've resulted in invalid parameter");
+
+			} else {
+				Instruction testInst = new Multiply(p(""+randomNum1),p(""+randomNum2),i);
+				assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
+				assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
+				assertEquals(preCalc, testInst.getParam1().getValue(), "Incorrectly Calculated");
+				assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
+			}
 		}
 	}
 
@@ -133,13 +165,15 @@ class MathInstructionsTests {
 	@DisplayName("Divide Precomputation")
 	void DividePrecomputeTest() {
 		for (int i = 0; i < randomCount; i++) {
-			int randomNum1 = (int)(Math.random() * 10000);
-			int randomNum2 = (int)(Math.random() * 10000);
+			int randomNum1 = randomValue();
+			int randomNum2 = randomValue();
+			int preCalc = randomNum1 / randomNum2;
 
+			//Always is closer to 0, so doesn't need to check if results in invalid param
 			Instruction testInst = new Divide(p(""+randomNum1),p(""+randomNum2),i);
 			assertNotEquals(-100, testInst.getInstNum(), testInst.getErrMsg());
 			assertEquals("Move", testInst.getInstName(), "Instruction is not a Move");
-			assertEquals(randomNum1/randomNum2, testInst.getParam1().getValue(), "Incorrectly Calculated");
+			assertEquals(preCalc, testInst.getParam1().getValue(), "Incorrectly Calculated");
 			assertEquals(Types.RESULT, testInst.getParam2().getType(), "Moveing into the wrong register");
 		}
 	}
