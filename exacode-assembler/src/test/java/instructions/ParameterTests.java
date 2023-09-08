@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 
 import com.pennyjim.exacode.Parameter;
 import com.pennyjim.exacode.Parameter.InvalidParameterException;
@@ -141,10 +142,19 @@ public class ParameterTests {
 		assertThrows(exception, () -> {new Parameter("ILLOGIC");}, "Shouldn't have worked");
 	}
 
+	@EnabledIf("isDefinitionImplemented")
 	@Test
 	@DisplayName("Definition Test")
 	void DefinitionTest() {
 		// TODO: Once I understand how it's going to happen in Parameter, make the test
 		fail("Not Implemented");
+	}
+	boolean isDefinitionImplemented() {
+		try {
+			new Parameter("@TESTDEFINITION");
+			return true;
+		} catch (Exception e) {
+			return !e.getMessage().equals("Not yet Implemented");
+		}
 	}
 }
